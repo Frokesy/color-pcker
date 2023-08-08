@@ -19,13 +19,7 @@ function App() {
       setShow(true);
     }
   }, [defaultColor]);
-
-  // useEffect(() => {
-  //   if (selectedColor.length === 7 && selectedColor[0] === "#") {
-  //     setDefaultColor(selectedColor);
-  //   }
-  // }, [selectedColor]);
-      
+        
   return (
     <div className="py-4 w-[300px] px-4">
       <div className="flex items-center">
