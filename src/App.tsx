@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Dropdown from "./components/Dropdown";
+import History from "./History";
 
 function App() {
   const [selectedColor, setSelectedColor] = useState("");
@@ -42,10 +43,10 @@ function App() {
           <p>
             Selected color: <span className="font-bold">{selectedColor}</span>
           </p>
-          {/* <button onClick={copyColor}>copy</button> */}
           <Dropdown selectedColor={selectedColor} />
         </div>
       )}
+      <History selectedColor={selectedColor} />
     </div>
   );
 }
