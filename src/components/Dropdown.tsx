@@ -3,8 +3,9 @@ import { Menu, Transition } from '@headlessui/react'
 
 interface DropdownProps {
   selectedColor: string;
+  getNewColor: (data: string) => void;
 }
-const Dropdown: React.FC<DropdownProps> = ({ selectedColor }) => {
+const Dropdown: React.FC<DropdownProps> = ({ selectedColor, getNewColor }) => {
 
   const [copied, setCopied] = useState(false);
   
@@ -28,16 +29,19 @@ const Dropdown: React.FC<DropdownProps> = ({ selectedColor }) => {
       case "Copy as raw":
         navigator.clipboard.writeText(selectedColor);
         setCopied(true);
+        getNewColor(selectedColor);
         resetCopiedStatus();
         break;
       case "Copy as CSS":
         navigator.clipboard.writeText(`color: ${selectedColor};`);
         setCopied(true);
+        getNewColor(selectedColor);
         resetCopiedStatus();
         break;
       case "Copy as Tailwind":
         navigator.clipboard.writeText(`text-[${selectedColor}]`);
         setCopied(true);
+        getNewColor(selectedColor);
         resetCopiedStatus();
         break;
       default:
@@ -48,7 +52,7 @@ const Dropdown: React.FC<DropdownProps> = ({ selectedColor }) => {
 
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button disabled={copied} className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 border-none text-gray-900 ring-gray-300 hover:bg-gray-50">
+        <Menu.Button disabled={copied} className="border-none text-[13px] hover:bg-gray-50">
           {copied ? 'Copied!' : 'Copy'}
         </Menu.Button>
       </div>

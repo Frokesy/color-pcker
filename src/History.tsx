@@ -6,70 +6,38 @@ interface HistoryProps {
 
 const History: React.FC<HistoryProps> = ({ selectedColor }) => {
   const [historyArray, setHistoryArray] = useState<string[]>([]);
-  const [copy, setCopied] = useState<boolean>(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(selectedColor);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 1000);
-  };
-
-  const handleRemove = () => {
-    const filteredArray = historyArray.filter(
-      (color) => color !== selectedColor
-    );
-    setHistoryArray(filteredArray);
-  };
+  console.log(selectedColor);
 
   useEffect(() => {
-    const storedHistory = JSON.parse(localStorage.getItem("history") || "[]");
-    console.log("hist",storedHistory)
-    setHistoryArray(storedHistory);
+    if (selectedColor) {
+      setHistoryArray((prev) => [selectedColor, ...prev]);
+    }
   }, [selectedColor]);
 
-  useEffect(() => {
-    setHistoryArray([selectedColor, ...historyArray]);
-    localStorage.setItem(
-      "history",
-      JSON.stringify([selectedColor, ...historyArray])
-    );
-  }, [selectedColor]);
-
-  console.log(historyArray)
   return (
     <div>
-      {historyArray.length !== 0 && (
+      {historyArray.length > 0 && (
         <div>
-          <h1 className="text-[16px] font-semibold mt-4">Recent picks</h1>
-          <div className="flex flex-col gap-y-2 mt-2">
-            {historyArray.map((color, index) => (
-              <div key={index} className="flex justify-between text-[14px]">
+          <h2 className="text-[15px] font-semibold mt-4">Recent Picks</h2>
+          {historyArray.map((color, index) => (
+            <div key={index}>
+              <div className="flex items-center mt-2 justify-between">
                 <div className="flex items-center">
                   <div
-                    className="w-4 h-4 rounded-full mr-2"
+                    className="w-4 h-4 rounded-full border border-gray-300 shadow-md inline-block mr-2"
                     style={{ backgroundColor: color }}
                   ></div>
-                  <p className="text-[13px]">{color}</p>
+                  <span className="text-[13px] font-light">{color}</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <button
-                    className="text-[12px] text-blue-700"
-                    onClick={handleCopy}
-                  >
-                    {copy ? "Copied!" : "Copy"}
-                  </button>
-                  <button
-                    className="text-[12px] text-red-500"
-                    onClick={handleRemove}
-                  >
-                    Remove
-                  </button>
+
+                <div className="flex space-x-4 items-center">
+                  <button className="text-[11px] text-blue-500">Copy</button>
+                  <button className="text-[11px] text-red-500">Delete</button>
                 </div>
               </div>
-            ))}
-          </div>
+              <hr className="my-1" />
+            </div>
+          ))}
         </div>
       )}
     </div>
