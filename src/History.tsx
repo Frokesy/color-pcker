@@ -6,13 +6,39 @@ interface HistoryProps {
 
 const History: React.FC<HistoryProps> = ({ selectedColor }) => {
   const [historyArray, setHistoryArray] = useState<string[]>([]);
-  console.log(selectedColor);
+  const [copy, setCopy] = useState<boolean>(false);
+  const [copiedColor, setCopiedColor] = useState<string>("");
 
   useEffect(() => {
     if (selectedColor) {
-      setHistoryArray((prev) => [selectedColor, ...prev]);
+      localStorage.setItem(
+        "colorHistory",
+        JSON.stringify([selectedColor, ...historyArray])
+      );
     }
+
+    const localHistory = localStorage.getItem("colorHistory");
+    if (localHistory) {
+      setHistoryArray(JSON.parse(localHistory));
+    }
+    console.log(localHistory);
   }, [selectedColor]);
+
+
+  const copyColor = (color: string) => {
+    navigator.clipboard.writeText(color);
+    setCopy(true);
+    setCopiedColor(color);
+    setTimeout(() => {
+      setCopy(false);
+    }, 500);
+  };
+
+  const deleteColor = (color: string) => {
+    const filteredHistory = historyArray.filter((item) => item !== color);
+    localStorage.setItem("colorHistory", JSON.stringify(filteredHistory));
+    setHistoryArray(filteredHistory);
+  };
 
   return (
     <div>
@@ -31,8 +57,18 @@ const History: React.FC<HistoryProps> = ({ selectedColor }) => {
                 </div>
 
                 <div className="flex space-x-4 items-center">
-                  <button className="text-[11px] text-blue-500">Copy</button>
-                  <button className="text-[11px] text-red-500">Delete</button>
+                  <button
+                    className="text-[11px] text-blue-500"
+                    onClick={() => copyColor(color)}
+                  >
+                    {copy && copiedColor === color ? "Copied!" : "Copy"}
+                  </button>
+                  <button
+                    className="text-[11px] text-red-500"
+                    onClick={() => deleteColor(color)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
               <hr className="my-1" />
